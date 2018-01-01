@@ -1,0 +1,1 @@
+$(document).ready(function(){var e=$(".navbar-inverse").outerHeight(!1);$(".category-box").css("margin-top",e),$(window).resize(function(){var e=$(".navbar-inverse").outerHeight(!1);$(".category-box").css("margin-top",e)})});

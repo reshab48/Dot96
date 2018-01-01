@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}{% endblock %}
+{% block content %}
+<script type="text/javascript" src="{% static "js/form.js" %}"></script>
+<script type="text/javascript" src="{% static "js/account/account.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/account/detail.css" %}">
+<div class="container" style="margin-top: 20px;">
+	<div class="row">
+		<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+			<div class="panel panel-default" style="border-radius: 0px;">
+				<div class="row" style="padding-top: 10px; padding-bottom: 10px;">
+					<div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
+						<img src="{% static "png/profile-pic.svg" %}" class="img-circle img-responsive">
+					</div>
+					<div class="col-lg-9 col-md-9 col-sm-8 col-xs-8">
+						<h5 style="font-weight: bold;">Hello {{ user.first_name }}</h5>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default" style="border-radius: 0px;">
+				<div class="panel-heading" style="background-color: white">
+					<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+							<h6><i class="fa fa-shopping-bag text-primary"></i></h6>
+						</div>
+						<div class="col-lg-10 col-md-10 col-sm-9 col-xs-9">
+							<a href="{% url "account:account_orders" %}"><h6 style="font-weight: bold;" class="text-muted">MY ORDERS <i class="fa fa-caret-right pull-right"></i></h6></a>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body" style="background-color: white; padding-bottom: 5px;">
+					<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+							<h6><i class="fa fa-user text-primary"></i></h6>
+						</div>
+						<div class="col-lg-10 col-md-10 col-sm-9 col-xs-9">
+							<h6 style="font-weight: bold;" class="text-muted">ACCOUNT SETTINGS</h6>
+						</div>
+					</div>
+				</div>
+				<div class="list-group" style="border-radius: 0px; border: none; border-bottom: 1px solid #ddd;">
+					<div class="row list-group-item item-active" style="border-radius: 0px; border: none;">
+						<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+							
+						</div>
+						<div class="col-lg-10 col-md-10 col-sm-9 col-xs-9">
+							<a data-href="{{ request.user.get_absolute_url }}" style="font-size: 14px; font-weight: bold;">Profile Information</a>
+						</div>
+					</div>
+					<div class="row list-group-item" style="border-radius: 0px; border: none;">
+						<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+							
+						</div>
+						<div class="col-lg-10 col-md-10 col-sm-9 col-xs-9">
+							<a data-href="{% url "account:account_manage_address" %}" style="font-size: 14px; font-weight: bold;">Manage Addresses</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body" style="background-color: white; padding-bottom: 5px;">
+					<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+							<h6><i class="fa fa-id-card text-primary"></i></h6>
+						</div>
+						<div class="col-lg-10 col-md-10 col-sm-9 col-xs-9">
+							<h6 style="font-weight: bold;" class="text-muted">MY STUFF</h6>
+						</div>
+					</div>
+				</div>
+				<div class="list-group" style="border-radius: 0px; border: none; border-bottom: 1px solid #ddd;">
+					<div class="row list-group-item" style="border-radius: 0px; border: none;">
+						<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+							
+						</div>
+						<div class="col-lg-10 col-md-10 col-sm-9 col-xs-9">
+							<a data-href="{% url "account:account_wishlist" %}" style="font-size: 14px; font-weight: bold;">My Wishlist</a>
+						</div>
+					</div>
+					<div class="row list-group-item" style="border-radius: 0px; border: none;">
+						<div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+							
+						</div>
+						<div class="col-lg-10 col-md-10 col-sm-9 col-xs-9">
+							<a data-href="{% url "account:account_manage_feedback" %}" style="font-size: 14px; font-weight: bold;">My Feedbacks and Complaints</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+			{% if messages %}
+			{% for message in messages %}
+			{% if message.tags == "success" %}
+			<div class="alert alert-success fade in alert-dismissable">
+				<a class="close" href="#" data-dismiss="alert" aria-label="close" title="close">x</a>
+				<strong>Success!</strong> {{ message|safe }}
+			</div>
+			{% else %}
+			<div class="alert alert-danger fade in alert-dismissable">
+				<a class="close" href="#" data-dismiss="alert" aria-label="close" title="close">x</a>
+				<strong>Error!</strong> {{ message|safe }}
+			</div>
+			{% endif %}
+			{% endfor %}
+			{% endif %}
+			<div class="panel panel-default" style="border-radius: 0px; padding: 20px;">
+				<div class="row" style="margin-bottom: 10px;">
+					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+						<h6 style="font-weight: bold;">Personal Information</h6>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+						<h6 style="font-weight: bold; width: auto; display: inline;" class="text-primary pull-right"><a href="{% url "account:password_change" %}">Change Password</a></h6>
+					</div>
+				</div>
+				<div class="row">
+					<form action="." method="post">
+						{% for field in user_form %}
+						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding: 3px; margin-bottom: 20px;">
+							{{ field.errors }}
+							{{ field.label_tag }}
+							{{ field }}
+						</div>
+						{% endfor %}
+						{% for field in profile_form %}
+						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding: 3px; margin-bottom: 20px;">
+							{{ field.errors }}
+							{{ field.label_tag }}
+							{{ field }}
+						</div>
+						{% endfor %}
+						{% csrf_token %}
+						<input type="submit" name="edit" value="EDIT" class="sv-btn pull-right" style="background-color: #2874f0; margin-right: 5px;">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

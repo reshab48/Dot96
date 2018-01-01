@@ -1,0 +1,28 @@
+from django.conf.urls import include, url
+
+urlpatterns = [
+    url(r'^login/$', 'account.views.account_login', name='login'),
+    url(r'^logout/$', 'account.views.account_logout', name='logout'),
+    url(r'^logout_login/$', 'account.views.account_logout_then_login', name='logout_login'),
+	url(r'^password_change/$', 'account.views.account_password_change', {'post_change_redirect' : 'account:password_change_done'}, name='password_change'),
+	url(r'^password_change/done/$', 'account.views.account_password_change_done', name='password_change_done'),
+	url(r'^password_reset/$','account.views.account_password_reset', {'post_reset_redirect' : 'account:password_reset_done'}, name='password_reset'),
+	url(r'^password_reset/done/$','account.views.account_password_reset_done', name='password_reset_done'),
+	url(r'^password_reset/confirm/(?P<uidb64>[-\w]+)/(?P<token>[-\w]+)/$','account.views.account_password_reset_confirm', {'post_reset_redirect' : 'account:password_reset_complete'}, name='password_reset_confirm'),
+	url(r'^password_reset/complete/$','account.views.account_password_reset_complete',name='password_reset_complete'),
+	url(r'^signup/$','account.views.account_profile_create',name='signup'),
+	url(r'^user/detail/(?P<username>[-\w]+)/$','account.views.account_detail',name='account_detail'),
+	url(r'^user/manage/address/$','account.views.account_manage_address',name='account_manage_address'),
+	url(r'^user/manage/address/edit/(?P<address_id>\d+)/$','account.views.account_edit_address',name='account_edit_address'),
+	url(r'^user/manage/address/delete/(?P<address_id>\d+)/$','account.views.account_delete_address',name='account_delete_address'),
+	url(r'^user/manage/address/mark_as_default/(?P<address_id>\d+)/$','account.views.account_mark_address_default',name='account_mark_address_default'),
+	url(r'^user/wishlist/$','account.views.account_wishlist',name='account_wishlist'),
+	url(r'^user/manage/feedback/$','account.views.account_manage_feedback',name='account_manage_feedback'),
+	url(r'^user/order/cart_checkout/$','account.views.cart_checkout',name='cart_checkout'),
+	url(r'^user/order/create/$','account.views.create_order',name='create_order'),
+	url(r'^user/orders/$', 'account.views.account_orders', name='account_orders'),
+	url(r'^user/order/detail/(?P<id>\d+)/$', 'account.views.order_detail', name='order_detail'),
+	url(r'^user/order/invoice/(?P<id>\d+)/$', 'account.views.order_invoice', name='order_invoice'),
+	url(r'^user/order/item/return/(?P<order_id>\d+)/(?P<order_item_id>\d+)/$', 'account.views.order_item_return', name='order_item_return'),
+	url(r'^user/order/item/exchange/(?P<order_id>\d+)/(?P<order_item_id>\d+)/$', 'account.views.order_item_exchange', name='order_item_exchange'),
+]

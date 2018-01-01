@@ -1,0 +1,1 @@
+$(document).ready(function(){$(".list-group-item").hover(function(){$(this).find("h5").addClass("text-primary")},function(){$(this).find("h5").removeClass("text-primary")}),$(".list-group-item").click(function(){window.location.href=$(this).find("a").attr("data-href")})});

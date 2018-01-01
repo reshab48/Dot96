@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Your Shopping Cart
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static "css/cart/detail.css" %}">
+<script type="text/javascript" src="{% static "js/cart/cart.js" %}"></script>
+{% if cart|length > 0 %}
+<div class="row" style="padding-top: 30px;">
+	<div class="col-lg-8 col-md-8 visible-lg visible-md">
+		{% if messages %}
+		{% for message in messages %}
+		<div class="alert alert-danger fade in alert-dismissable" style="list-style: none; margin: 0px;">
+			<a class="close" href="#" data-dismiss="alert" aria-label="close" title="close">x</a>
+			<strong>Error!</strong> {{message|safe}}
+		</div>
+		{% endfor %}
+		{% endif %}
+		<div class="panel panel-default" style="padding: 10px; border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white;">
+				<p style="font-size: 16px; font-weight: 500;">MY CART ({{cart|length}})</p>
+			</div>
+			<div class="panel-body">
+				{% for obj in cart %}
+				{% with item=obj.item %}
+				<div class="row" style="margin-bottom: 15px;">
+					<div class="col-lg-2 col-md-3" style="padding: 0px;">
+						<a href="{{ item.get_absolute_url }}">
+							{% load thumbnail %}
+							{% thumbnail obj.colour.colour_image "250x300" crop="100% center" as im %}
+							<img src="{{ im.url }}" style="height: 120px; width: 120px;">
+							{% endthumbnail %}
+						</a>
+					</div>
+					<div class="col-lg-6 col-md-5">
+						<h4 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.name }}</h4>
+						{% if obj.quantity >= item.wholesale_at %}
+						<p style="font-size: 20px; color: black;"><i class="fa fa-rupee"></i><span id="price-tag">{{ item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ item.wholesale_dis|floatformat }}% off</span></p>
+						{% else %}
+						<p style="font-size: 20px; color: black;"><i class="fa fa-rupee"></i><span id="price-tag">{{ item.retail_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ item.retail_dis|floatformat }}% off</span></p>
+						{% endif %}
+						<a data-href="{% url "cart:cart_remove" %}" data-item-id="{{ item.id }}" data-colour-id="{{ obj.colour.id }}" class="remove-btn" style="font-size: 14px; font-weight: 500; text-decoration: none; cursor: pointer;">REMOVE</a>
+					</div>
+					<div class="col-lg-4 col-md-4">
+						<p class="text-muted">Delivery within 2-3 Business days.</p>
+						<div class="row">
+							<div class="col-lg-8 col-md-8" style="padding: 3px;">
+								<input type="number" value="{{ obj.quantity }}" min="1" max="{{ obj.colour.stock }}" class="qty-input form-control" data-item-id="d{{ item.id }}" data-colour-id="d{{ obj.colour.id }}">	
+							</div>
+							<div class="col-lg-4 col-md-4" style="padding: 3px;">
+								<a data-href="{% url "cart:cart_add" %}" class="btn btn-primary update-btn" data-item-id="d{{ item.id }}" data-colour-id="d{{ obj.colour.id }}" style="border-radius: 0px; font-weight: bold; display: none;"><i class="fa fa-caret-right"></i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endwith %}
+				{% endfor %}
+				<div class="row">
+					<div class="col-lg-2 col-md-1">
+						
+					</div>
+					<div class="col-lg-10 col-md-11">
+						<div class="row">
+							<div class="col-lg-6 col-md-6">
+								<a href="{% url "shop:index" %}" class="buy-btn btn-block text-center" style="background-color: #ff9f00"><i class="fa fa-caret-left"></i> CONTINUE SHOPPING</a>
+							</div>
+							<div class="col-lg-6 col-md-6">
+								<a href="{% url "account:cart_checkout" %}" class="buy-btn btn-block text-center out-btn" style="background-color: #00991c;">PLACE ORDER</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-12 col-md-12 visible-sm visible-xs">
+		{% if messages %}
+		{% for message in messages %}
+		<div class="alert alert-danger fade in alert-dismissable" style="list-style: none; margin: 0px;">
+			<a class="close" href="#" data-dismiss="alert" aria-label="close" title="close">x</a>
+			<strong>Error!</strong> {{message|safe}}
+		</div>
+		{% endfor %}
+		{% endif %}
+		<div class="panel panel-default" style="padding: 10px; border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white;">
+				<p style="font-size: 16px; font-weight: 500;">MY CART ({{cart|length}})</p>
+			</div>
+			<div class="panel-body">
+				{% for obj in cart %}
+				{% with item=obj.item %}
+				<div class="row" style="margin-bottom: 15px;">
+					<div class="col-sm-6 col-xs-6" style="padding: 0px;">
+						<a href="{{ item.get_absolute_url }}">
+							{% load thumbnail %}
+							{% thumbnail obj.colour.colour_image "250x300" crop="100% center" as im %}
+							<img src="{{ im.url }}" style="height: 120px; width: 120px;">
+							{% endthumbnail %}
+						</a>
+					</div>
+					<div class="col-sm-6 col-xs-6">
+						<p class="text-muted">Delivery within 2-3 Business days.</p>
+						<div class="row">
+							<div class="col-sm-8 col-xs-8" style="padding: 3px;">
+								<input type="number" value="{{ obj.quantity }}" min="1" max="{{ obj.colour.stock }}" class="qty-input form-control" data-item-id="m{{ item.id }}" data-colour-id="m{{ obj.colour.id }}">	
+							</div>
+							<div class="col-sm-4 col-xs-4" style="padding: 3px;">
+								<a data-href="{% url "cart:cart_add" %}" class="btn btn-primary update-btn" data-item-id="m{{ item.id }}" data-colour-id="m{{ obj.colour.id }}" style="border-radius: 0px; font-weight: bold; display: none;"><i class="fa fa-caret-right"></i></a>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12" style="padding: 0px; padding-top: 10px;">
+						<h4 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.name }}</h4>
+						{% if obj.quantity >= item.wholesale_at %}
+						<p style="font-size: 20px; color: black;"><i class="fa fa-rupee"></i><span id="price-tag">{{ item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ item.wholesale_dis|floatformat }}% off</span></p>
+						{% else %}
+						<p style="font-size: 20px; color: black;"><i class="fa fa-rupee"></i><span id="price-tag">{{ item.retail_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ item.retail_dis|floatformat }}% off</span></p>
+						{% endif %}
+						<a data-href="{% url "cart:cart_remove" %}" data-item-id="{{ item.id }}" data-colour-id="{{ obj.colour.id }}" style="font-size: 14px; font-weight: 500; text-decoration: none; cursor: pointer;" class="remove-btn">REMOVE</a>
+					</div>
+				</div>
+				{% endwith %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+		<div class="panel panel-default" style="border-radius: 0px; padding: 10px;">
+			<div class="panel-heading" style="background-color: white;">
+				<p style="font-size: 16px;" class="text-muted">PRICE DETAILS</p>
+			</div>
+			<div class="panel-body">
+				{% for obj in cart %}
+				{% with item=obj.item %}
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-7 col-xs-6" style="padding: 0px;">
+						<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-muted">{{ item.name }}</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-5 col-xs-6">
+						<p style="font-weight: bold;" class="row text-right"><span class="text-success pull-left">x{{obj.quantity}}</span> {{ obj.total_price|floatformat }}</p>
+					</div>
+				</div>
+				{% endwith %}
+				{% endfor %}
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding: 0px;">
+						<p>GST Charges</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+						<p style="font-weight: bold;" class="pull-right">
+							<span class="text-success">{{ cart.get_total_gst|floatformat }}</span>
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding: 0px;">
+						<p>Delivery Charges</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+						<p style="font-weight: bold;" class="pull-right">
+							<span class="text-success">FREE</span>
+						</p>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding: 0px;">
+						<p style="font-size: 16px; font-weight: bold;">Amount Payable</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+						<p style="font-weight: bold; font-size: 16px;" class="pull-right"><i class="fa fa-rupee"></i>{{ cart.get_total_price|floatformat }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row visible-xs visible-sm" style="margin-left: 15px; margin-right: 15px; margin-bottom: 15px;">
+		<a href="{% url "shop:index" %}" class="buy-btn btn-block text-center" style="background-color: #ff9f00; margin-bottom: 5px;"><i class="fa fa-caret-left"></i> CONTINUE SHOPPING</a>
+		<a href="{% url "account:cart_checkout" %}" class="buy-btn btn-block text-center out-btn" style="background-color: #00991c;">PLACE ORDER</a>
+	</div>
+</div>
+{% else %}
+<div class="jumbotron text-center">
+	<h1>Oops!</h1>
+	<p class="text-muted"><i class="fa fa-info-circle"></i> You currently have no items in your cart.</p>
+	<div class="row">
+		<div class="col-lg-4 col-md-3 visible-md visible-lg">
+		
+		</div>
+		<div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+			<a href="{% url "shop:index" %}" class="buy-btn btn-block text-center" id="cart-add" style="background-color: #ff9f00; margin-bottom: 5px;"><i class="fa fa-caret-left"></i> CONTINUE SHOPPING</a>
+		</div>
+		<div class="col-lg-4 col-md-3 visible-md visible-lg">
+		
+		</div>
+	</div>
+</div>
+{% endif %}
+<div id="loader-modal" class="modal fade" data-backdrop='static' data-keyboard='false' style="padding-top: 15%;">
+	<h1 class="text-center" style="color: white;">Please Wait!</h1>
+	<p class="text-center" style="color: white;">We are processing your Order. Thank You for your patience....</p>
+	<h1 class="text-center">
+		<div class="loader"></div>
+	</h1>
+</div>
+{% endblock %}

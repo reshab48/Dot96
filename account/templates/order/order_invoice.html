@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% load staticfiles %}
+	<title>Order Invoice</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="{% static "css/order/list.css" %}">
+</head>
+<body>
+<div class="row" style="margin-top: 10px;">
+	<div class="col-lg-2 col-md-1">
+		
+	</div>
+	<div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+		<div class="panel panel-default" style="border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white;">
+				<h5 style="font-weight: bold;"><span class="text-muted">{{ request.user.first_name }}</span> <i class="fa fa-caret-right"></i> Order Invoice</h5>
+			</div>
+			<div class="panel-body" style="background-color: white;">
+				<div class="panel panel-default" style="border-radius: 0px;">
+					<div class="panel-heading">
+						<a class="id-btn" style="background-color: #2874f0;">{{ order.id }}</a>
+					</div>
+					<div class="panel-body" style="background-color: white;">
+						<div class="row" style="padding: 20px;">
+							<h5 style="font-weight: bold; margin-bottom: 25px;">ADDRESS</h5>
+							<h6 style="margin-bottom: 3px; font-weight: bold;">{{ order.drop_out.full_name }}</h6>
+							<p style="margin-top: 0px; margin-bottom: 20px; font-size: 15px;">{{ order.drop_out.street }} {{ order.drop_out.landmark }} PO: {{ order.drop_out.city }} -{{ order.drop_out.pin }}</p>
+							<p style="font-size: 15px;"><span style="font-weight: bold;">Phone</span> {{ order.drop_out.phone }}</p>
+						</div>
+						<div class="row" style="margin-bottom: 15px; padding: 20px;">
+						{% for order_item in order.order_item.all %}
+							<div class="col-sm-6 col-xs-6" style="padding-left: 0px;">
+								<h6 style="font-weight: bold; font-size: 16px;">{{ order_item.item.item.name }}</h6>
+								<p class="text-muted" style="margin-bottom: 0px;">in <a>{{ order_item.item.item.sub_category }}</a></p>
+								{% if order_item.quantity >= order_item.item.item.wholesale_at %}
+								<p style="font-size: 15px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span id="price-tag">{{ order_item.item.item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ order_item.item.item.wholesale_dis|floatformat }}% off</span></p>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+								{% else %}
+								<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span id="price-tag">{{ order_item.item.item.retail_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ order_item.item.item.retail_dis|floatformat }}% off</span></p>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+								{% endif %}
+								<h6 style="font-weight: bold; font-size: 28px;"><span class="text-success" style="margin-right: 8px; font-weight: normal;">x{{ order_item.quantity }}</span> <i class="fa fa-rupee"></i>{{ order_item.amount }} <span style="margin-left: 5px; font-weight: normal; font-size: 18px;" class="text-muted">(Inclusive of GST)</span></h6>
+							</div>
+						{% endfor %}
+						</div>
+					</div>
+					<div class="panel-footer">
+						<div class="row" style="padding: 20px;">
+							<h6 style="font-size: 20px;"><span class="text-muted">Ordered On</span> {{ order.created }}</h6>
+							<h6 style="font-size: 30px;"><span class="text-muted" style="margin-right: 5px;">Order Total</span> <i class="fa fa-rupee"></i>{{ order.order_total }}</h6>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-2 col-md-1">
+		
+	</div>
+</div>
+</body>
+</html>

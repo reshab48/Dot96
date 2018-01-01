@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static "css/order/checkout.css" %}">
+<script type="text/javascript" src="{% static "js/form.js" %}"></script>
+<script type="text/javascript" src="{% static "js/order/checkout.js" %}"></script>
+<div class="row" style="padding-top: 30px;">
+	<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+		<div class="panel panel-default" style="border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white; padding: 5px;">
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+						<h6 class="text-muted" style="font-weight: bold;"><span class="badge">1</span> LOGIN <i class="fa fa-check text-primary" id="login-check"></i></h6>
+						<p style="font-weight: bold;">{{ request.user.email }}</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+						<button class="btn btn-default pull-right" id="login-change" onclick="$(this).hide();" data-toggle="collapse" data-target="#login-body" style="margin-top: 20px;">CHANGE</button>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body collapse" id="login-body" style="border-radius: 0px;">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+						<h6 style="font-weight: bold;"><span class="text-muted">Email</span> {{ request.user.email }}</h6>
+						<a href="{% url "account:logout_login" %}" class="text-primary" style="margin-top: 5px; margin-bottom: 10px; font-weight: bold;">Logout and Sign in to another account</a>
+						<a class="buy-btn btn-block text-center" id="con-check" style="background-color: #333; cursor: pointer; margin-top: 5px;">CONTINUE CHECKOUT</a>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+						<p class="text-muted"><i class="fa fa-truck text-primary"></i> Hassle free Returns and Exchange of Products</p>
+						<p class="text-muted"><i class="fa fa-bell text-primary"></i> Get relevant Alerts and Notification on Orders</p>
+						<p class="text-muted"><i class="fa fa-star text-primary"></i> Wishlist, Recent Views, Feedbacks and more</p>		
+					</div>
+				</div>
+				<p class="text-muted text-center" style="margin: 0px; margin-top: 20px;">Please note that upon clicking "Logout" you will loose all items in cart and will be redirected to Dot96 home page.</p>
+			</div>
+		</div>
+		<div class="panel panel-default" style="border-radius: 0px; margin-bottom: 5px;">
+			<div class="panel-heading" style="background-color: white; padding: 5px;">
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+						<h6 class="text-muted" style="font-weight: bold;"><span class="badge">2</span> DELIVERY ADDRESS <i class="fa fa-check text-primary hidden"></i></h6>
+						<p id="address-head"></p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+						<button class="btn btn-default pull-right" id="address-change" onclick="$(this).hide();" data-toggle="collapse" data-target="#address-body" style="margin-top: 3px; display: none;">CHANGE</button>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body collapse in" id="address-body">
+				<div class="list-group" style="border-radius: 0px;">
+					{% if addresses %}
+					{% for address in addresses %}
+					<div class="list-group-item" style="padding-top: 20px; cursor: pointer;">
+						<div class="row">
+							<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 address-info">
+								<h6 style="font-weight: bold; width: auto; display: inline;">{{ address.full_name }}</h6>
+								<h6 style="font-weight: bold; width: auto; display: inline; margin-left: 10px;">{{ address.phone }}</h6>
+								<p class="text-muted" style="margin-top: 10px;">{{ address.street }} {{ address.landmark }} PO: {{ address.city }} -{{ address.pin }}</p>
+							</div>
+							{% if address.default %}
+							<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 select-ara active">
+								<a class="del-btn btn-block text-center" data-toggle="collapse" data-target="#address-body" data-id="{{ address.id }}" style="background-color: #00991c;">DELIVER HERE</a>
+							</div>
+							{% else %}
+							<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 select-ara">
+								<a class="del-btn btn-block text-center" data-toggle="collapse" data-target="#address-body" data-id="{{ address.id }}" style="background-color: #00991c; display: none;">DELIVER HERE</a>
+							</div>
+							{% endif %}
+						</div>
+					</div>
+					{% endfor %}
+					{% else %}
+					<div class="list-group-item">
+						<h6 class="text-center text-warning" style="font-weight: bold;">No Addresses Yet!</h6>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default visible-lg visible-md" style="border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white; padding: 20px; cursor: pointer;" data-toggle="collapse" data-target="#form">
+				<h6 style="font-weight: bold; width:auto; display: inline; margin-right: 10px; cursor: pointer;" class="text-primary"><i class="fa fa-plus"></i></h6>
+				<h6 style="font-weight: bold; width:auto; display: inline; cursor: pointer;" class="text-primary">ADD NEW ADDRESS</h6>		
+			</div>
+			<div class="panel-body collapse" id="form" style="background-color: white;">
+				<div class="row">
+					<form action="." method="post">
+						{% for field in address_form %}	
+						<div class="col-lg-6 col-md-6" style="margin-bottom: 20px;">
+							{{ field.errors }}
+							{{ field.label_tag }}
+							{{ field }}
+						</div>
+						{% endfor %}
+						{% csrf_token %}
+						<div class="col-lg-6 col-md-6 pull-right">
+							<input type="submit" name="add" value="ADD" class="sv-btn btn-block" style="background-color: #2874f0; margin-right: 10px;">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default visible-xs visible-sm" style="border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white; padding: 20px; cursor: pointer;" data-toggle="collapse" data-target="#form-1">
+				<h6 style="font-weight: bold; width:auto; display: inline; margin-right: 10px; cursor: pointer;" class="text-primary"><i class="fa fa-plus"></i></h6>
+				<h6 style="font-weight: bold; width:auto; display: inline; cursor: pointer;" class="text-primary">ADD 
+							NEW ADDRESS</h6>		
+			</div>
+			<div class="panel-body collapse" id="form-1" style="background-color: white;">
+				<form action="." method="post">
+					{{ address_form.as_p }}
+					{% csrf_token %}
+					<input type="submit" name="add" value="ADD" class="sv-btn btn-block" style="background-color: #2874f0; margin-right: 10px; margin-top: 5px;">
+				</form>
+			</div>
+		</div>
+		<div class="panel panel-default" style="border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white; padding: 5px;">
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" style="padding-top: 10px; padding-bottom: 10px;">
+						<h6 class="text-muted" style="font-weight: bold; width: auto; display: inline;"><span class="badge">3</span> ORDER SUMMARY <i class="fa fa-check text-primary hidden"></i></h6>
+						<p id="order-head" style="width: auto; display: inline;"></p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+						<button class="btn btn-default pull-right" id="order-change" onclick="$(this).hide();" data-toggle="collapse" data-target="#order-body" style="margin-top: 3px; display: none;">CHANGE</button>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body collapse" id="order-body">
+				{% for obj in cart %}
+				{% with item=obj.item %}
+				<div class="row item-row" data-id="{{ obj.colour.id }}" style="margin-bottom: 15px;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-6" style="padding: 0px;">
+						<a href="#">
+							{% load thumbnail %}
+							{% thumbnail obj.colour.colour_image "250x300" crop="100% center" as im %}
+							<img src="{{ im.url }}" style="height: 120px; width: 120px;">
+							{% endthumbnail %}
+						</a>
+					</div>
+					<div class="col-lg-6 col-md-5 visible-md visible-lg">
+						<h4 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.name }}</h4>
+						{% if obj.quantity >= item.wholesale_at %}
+						<p style="font-size: 20px; color: black;"><i class="fa fa-rupee"></i><span id="price-tag">{{ item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ item.wholesale_dis|floatformat }}% off</span></p>
+						{% else %}
+						<p style="font-size: 20px; color: black;"><i class="fa fa-rupee"></i><span id="price-tag">{{ item.retail_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ item.retail_dis|floatformat }}% off</span></p>
+						{% endif %}
+						<a href="#" style="font-size: 14px; font-weight: 500; text-decoration: none;">REMOVE</a>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+						<p class="text-muted">Delivery within 2-3 Business days.</p>
+						<div class="row">
+							<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding: 3px;">
+								<input type="number" value="{{ obj.quantity }}" min="1" max="{{ obj.colour.stock }}" class="qty-input form-control" data-item-id="{{ item.id }}" data-colour-id="{{ obj.colour.id }}">	
+							</div>
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding: 3px;">
+								<a href="{% url "cart:cart_add" %}" class="btn btn-primary update-btn" data-item-id="{{ item.id }}" data-colour-id="{{ obj.colour.id }}" style="border-radius: 0px; font-weight: bold; display: none;"><i class="fa fa-caret-right"></i></a>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-xs-12 visible-sm visible-xs">
+						<h4 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.name }}</h4>
+						{% if obj.quantity >= item.wholesale_at %}
+						<p style="font-size: 20px; color: black;"><i class="fa fa-rupee"></i><span id="price-tag">{{ item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ item.wholesale_dis|floatformat }}% off</span></p>
+						{% else %}
+						<p style="font-size: 20px; color: black;"><i class="fa fa-rupee"></i><span id="price-tag">{{ item.retail_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ item.retail_dis|floatformat }}% off</span></p>
+						{% endif %}
+						<a data-href="{% url "cart:cart_remove" %}" data-item-id="{{ item.id }}" data-colour-id="{{ obj.colour.id }}" class="remove-btn" style="font-size: 14px; font-weight: 500; text-decoration: none;">REMOVE</a>
+					</div>
+				</div>
+				{% endwith %}
+				{% endfor %}
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-xs-12 col-sm-12 pull-right">
+						<a class="buy-btn btn-block text-center con-btn" style="background-color: #ff9f00; cursor: pointer;">CONTINUE <i class="fa fa-caret-right"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default" style="border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white; padding: 5px;">
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-9 col-xs-9">
+						<h6 class="text-muted" id="payment-head" style="font-weight: bold;"><span class="badge">4</span> PAYMENT OPTIONS <i class="fa fa-check text-primary hidden"></i></h6>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-3 col-xs-3">
+
+					</div>
+				</div>
+			</div>
+			<div class="panel-body collapse" id="payment-body">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+						<p class="text-muted" style="font-size: 11px;">You can opt for the following methods of payment on delivery.</p>
+						<ul style="padding-left: 0px; list-style: none; font-size: 11px;" class="text-muted">
+							<li>PayTM</li>
+							<li>PhonePe</li>
+							<li>UPI Payment</li>
+							<li>Cash</li>
+						</ul>
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+						<div class="g-recaptcha" data-sitekey="6LeswzoUAAAAAJXYXq5QmAFpPMHU4Ze5-UI2MEj0" data-theme="light"></div>
+						<a href="#" class="checkout-btn btn-block text-center" style="background-color: #00991c; margin-top: 5px;">CHECKOUT <i class="fa fa-caret-right"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+		<div class="panel panel-default" style="border-radius: 0px; padding: 10px;">
+			<div class="panel-heading" style="background-color: white;">
+				<p style="font-size: 16px;" class="text-muted">PRICE DETAILS</p>
+			</div>
+			<div class="panel-body">
+				{% for obj in cart %}
+				{% with item=obj.item %}
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding: 0px;">
+						<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="text-muted">{{ item.name }}</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+						<p style="font-weight: bold;" class="row text-right"><span class="text-success pull-left">x{{obj.quantity}}</span> {{ obj.total_price|floatformat }}</p>
+					</div>
+				</div>
+				{% endwith %}
+				{% endfor %}
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding: 0px;">
+						<p>GST Charges</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+						<p style="font-weight: bold;" class="pull-right">
+							<span class="text-success">{{ cart.get_total_gst|floatformat }}</span>
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding: 0px;">
+						<p>Delivery Charges</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+						<p style="font-weight: bold;" class="pull-right">
+							{% if cart.get_total_price < 500 %}
+							50
+							{% else %}
+							<span class="text-success">FREE</span>
+							{% endif %}
+						</p>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding: 0px;">
+						<p style="font-size: 16px; font-weight: bold;">Amount Payable</p>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+						<p style="font-weight: bold; font-size: 16px;" class="pull-right"><i class="fa fa-rupee"></i><span id="total">{{ cart.get_total_price|floatformat }}</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="loader-modal" class="modal fade" data-backdrop='static' data-keyboard='false' style="padding-top: 15%;">
+	<h1 class="text-center" style="color: white;">Please Wait!</h1>
+	<p class="text-center" style="color: white;">We are processing your Order. Thank You for your patience....</p>
+	<h1 class="text-center">
+		<div class="loader"></div>
+	</h1>
+</div>
+<div id="successModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title text-success"><i class="fa fa-check"></i> Order Placed</h4>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-success">
+					<p><strong>Success!</strong> Order placed successfully! Please Check your Account.</p>
+				</div>
+				<p class="text-primary">We have received your order and its processing, we will reach you as soon as possible for further information. You will also receive a confirmation email @registered email!</p>
+			</div>
+			<div class="modal-footer">
+				<a href="{% url "shop:index" %}" class="modal-btn" style="background-color: #00991c;">RETURN SHOP</a>
+				<a href="{% url "account:account_orders" %}" class="modal-btn" style="background-color: #094ebc;">MY ORDERS</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="errorModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title text-danger"><i class="fa fa-exclamation-triangle"></i> Error Placing Order!</h4>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-danger">
+					<p><strong>Error!</strong> Invalid Recaptcha Response.</p>
+				</div>
+				<p class="text-primary">Please try again!</p>
+			</div>
+			<div class="modal-footer">
+				<a href="{% url "account:cart_checkout" %}" class="modal-btn" style="background-color: #ff000c;">TRY AGAIN</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

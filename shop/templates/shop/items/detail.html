@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js"></script>
+<script type="text/javascript" src="{% static "js/account/wish.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/detail.css" %}">
+<div class="row" style="background-color: white;">
+	<div class="col-lg-4 col-md-5 col-sm-12 col-xs-12" style="padding: 10px;">
+		<div id="itemCarousel" class="carousel slide" data-ride="carousel">
+			<ol class="carousel-indicators">
+				{% for colour_image in colour_images %}
+				<li data-target="#itemCarousel" class="pointers">
+				{% endfor %}
+			</ol>
+    		<div class="carousel-inner">
+				{% for colour_image in colour_images %}
+				<div class="item">
+        			{% load thumbnail %}
+      				{% thumbnail colour_image.image "800x800" crop="100% bottom" as img %}
+        			<img src="{{ img.url }}" style="width: 100%; max-height: 420px;">
+        			{% endthumbnail %}
+      			</div>
+				{% endfor %}
+    		</div>
+   			<a class="left carousel-control" href="#itemCarousel" data-slide="prev">
+    			<span class="glyphicon glyphicon-chevron-left"></span>
+    			<span class="sr-only">Previous</span>
+    		</a>
+    		<a class="right carousel-control" href="#itemCarousel" data-slide="next">
+    			<span class="glyphicon glyphicon-chevron-right"></span>
+    			<span class="sr-only">Next</span>
+    		</a>
+		</div>
+		<div class="row visible-lg visible-md" style="padding-top: 10px;">
+			<div class="col-lg-6 col-md-6" style="padding: 1px;">
+				<a href="#" class="buy-btn btn-block text-center cart-add" style="background-color: #ff9f00"><i class="fa fa-shopping-cart"></i> ADD TO CART</a>
+			</div>
+			<div class="col-lg-6 col-md-6" style="padding: 1px;">
+				<a href="#" class="buy-btn btn-block text-center add-check" style="background-color: #fb641b;"><i class="fa fa-rupee"></i> BUY NOW</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-8 col-md-7 col-sm-12 col-xs-12" style="padding: 5px;">
+		<div class="container-fluid" style="padding-top: 10px; padding-right: 5px; padding-left: 5px;">
+			<p class="text-muted" style="font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Shop > {{ item.category.name }} > {{ item.sub_category.name }} > {{ item.name }}</p>
+			<h4 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0px;">{{ item.name }}</h4>
+			<div class="row">
+				<span class="text-muted">in {{ item.sub_category.name }}</span>
+			</div>
+			<div class="row">
+				<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span id="price-tag">{{ item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ item.wholesale_dis|floatformat }}% off</span></p>
+				<p class="text-muted" style="font-size: 10px; margin-bottom: 0px;">(Not inclusive of GST)</p>
+			</div>
+			<div class="row" style="padding-bottom: 20px;">
+				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding-top: 5px; padding-left: 3px;">
+					<p style="height: 64px; width: 64px; display: table-cell; vertical-align: middle; font-size: 14px; font-weight: bold;" class="text-muted">Colors</p>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+					{% for item_colour in item_colours %}
+					{% load thumbnail %}
+					{% thumbnail item_colour.colour_image "250x300" crop="100% bottom" as im %}
+					{% if item_colour.id == colour_index.id %}
+					<a href="{% url "shop:item_detail_by_colour" item_slug=item.slug colour_id=item_colour.id %}" style="margin: 10px; float: left;"><img src="{{ im.url }}" style="width: 64px; height: 64px;" class="colour-active" data-id="{{ item_colour.id }}"></a>
+					{% else %}
+					<a href="{% url "shop:item_detail_by_colour" item_slug=item.slug colour_id=item_colour.id %}" style="margin: 10px; float: left;"><img src="{{ im.url }}" style="width: 64px; height: 64px;" data-id="{{ item_colour.id }}"></a>
+					{% endif %}
+					{% endthumbnail %}
+					{% endfor %}
+				</div>
+			</div>
+			<div class="row" style="padding-bottom: 20px;">
+				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding-top: 5px; padding-left: 3px;">
+					<p style="font-size: 14px; font-weight: bold;" class="text-muted">Highlights</p>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+					<ul class="highlights">
+						{% for detail in item_details %}
+						<li><i class="fa fa-arrow-right"></i> {{ detail.info }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+			<div class="row" style="padding-bottom: 20px;">
+				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding-top: 5px; padding-left: 3px;">
+					<p style="font-size: 14px; font-weight: bold;" class="text-muted">Quantity</p>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+					<span class="text-primary" id="wr-war" style="font-size: 13px;" data-st="{{ item.wholesale_at }}"><i class="fa fa-info-circle"></i> Wholesale Price starts at {{ item.wholesale_at }} or more.</span>
+					<input type="number" min="1" max="{{ colour_index.stock }}" value="{{ item.wholesale_at }}" class="form-control" style="border-radius: 0px; width: 100px; margin-top: 5px;" id="qty-input" data-id="{{ item.id }}">
+				</div>
+			</div>
+			<div class="row" style="padding-bottom: 20px;">
+				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="padding-top: 5px; padding-left: 3px;">
+					<p style="font-size: 14px; font-weight: bold;" class="text-muted">Description</p>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+					<p class="text-muted">{{ item.description }}</p>
+				</div>
+			</div>
+		</div>
+		<div class="row visible-sm visible-xs" style="padding-top: 10px;">
+			<div class="col-md-12 col-xs-12" style="padding: 1px;">
+				<a href="#" class="buy-btn btn-block text-center cart-add" style="background-color: #ff9f00"><i class="fa fa-shopping-cart"></i> ADD TO CART</a>
+			</div>
+			<div class="col-md-12 col-xs-12" style="padding: 1px;">
+				<a href="#" class="buy-btn btn-block text-center add-check" style="background-color: #fb641b;"><i class="fa fa-rupee"></i> BUY NOW</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% if items_viewed|length == 4 %}
+<div class="row" style="background-color: white; margin-top: 10px; margin-bottom: 10px;">
+	<div class="row" style="padding-top: 20px; padding-bottom: 20px;">
+		<div class="col-lg-9 col-md-9 col-sm-9 col-xs-7">
+			<h4 style="font-size: 22px; font-weight: bold;">Recently Viewed</h4>
+		</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-5">
+			
+		</div>
+	</div>
+	{% for obj in items_viewed %}
+	{% with item=obj.item %}
+	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" style="padding: 2px;">
+		<div class="panel panel-default item-box" style="margin: 0px; padding: 0px; border-radius: 0px;">
+			{% load thumbnail %}
+			{% thumbnail item.index_image "250x300" crop="100% center" as im %}
+			<a href="{{ item.get_absolute_url }}"><img src="{{ im.url }}" style="width: 100%;"></a>
+			{% endthumbnail %}
+			<div class="w3-container" style="padding: 10px;">
+				<a href="{{ item.get_absolute_url }}"><p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.name }}</p></a>
+				<div class="row" style="cursor: pointer;" data-toggle="collapse" data-target="#dis{{ item.id }}">
+					<p style="margin-bottom: 2px;"><strong>&#8377 {{ item.wholesale_price|floatformat }}</strong> <span class="text-success">{{ item.wholesale_dis|floatformat }}% off</span></p>
+					<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+				</div>
+				<div class="collapse" id="dis{{ item.id }}">
+					<span class="text-primary" style="font-size: 10px;">Retail</span>
+					<p>&#8377 {{ item.retail_price }} <span style="text-decoration: line-through;">&#8377 {{item.price}}</span> <span class="text-success">{{ item.retail_dis }}% off</span></p>
+					<span class="text-primary" style="font-size: 10px;">Wholesale</span>
+					<p>&#8377 {{ item.wholesale_price }} <span style="text-decoration: line-through;">&#8377 {{item.price}}</span> <span class="text-success">{{ item.wholesale_dis }}% off</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endwith %}
+	{% endfor %}
+</div>
+{% endif %}
+<div class="row" style="background-color: white; margin-top: 10px; margin-bottom: 10px;">
+	<div class="row" style="padding-top: 20px; padding-bottom: 20px;">
+		<div class="col-lg-9 col-md-9 col-sm-9 col-xs-7">
+			<h4 style="font-size: 22px; font-weight: bold;">Similar Products</h4>
+		</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-5">
+			<a href="{{ item.sub_category.get_absolute_url }}" class="pull-right btn-list">VIEW ALL</a>
+		</div>
+	</div>
+	{% for item in similar_items %}
+	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" style="padding: 2px;">
+		<div class="panel panel-default item-box" style="margin: 0px; padding: 0px; border-radius: 0px;">
+			{% load thumbnail %}
+			{% thumbnail item.index_image "250x300" crop="100% center" as im %}
+			<a href="{{ item.get_absolute_url }}"><img src="{{ im.url }}" style="width: 100%;"></a>
+			{% endthumbnail %}
+			<div class="w3-container" style="padding: 10px;">
+				<a href="{{ item.get_absolute_url }}"><p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.name }}</p></a>
+				<div class="row">
+					<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="padding: 0px; cursor: pointer;" data-toggle="collapse" data-target="#dis{{ item.id }}">
+						<p style="margin-bottom: 2px;"><strong>&#8377 {{ item.wholesale_price|floatformat }}</strong> <span class="text-success">{{ item.wholesale_dis|floatformat }}% off</span></p>
+						<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+					</div>
+					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding: 0px;">
+						{% if request.user.is_authenticated %}
+						{% with users_wished=item.wished.all %}
+						{% if request.user not in users_wished %}
+						<i class="fa fa-heart-o pull-right wish-btn" data-id="{{ item.id }}" data-action="wish" style="margin-top: 3px; margin-right: 3px; cursor: pointer;"></i>
+						{% else %}
+						<i class="fa fa-heart text-danger pull-right wish-btn" data-id="{{ item.id }}" data-action="unwish" style="margin-top: 3px; margin-right: 3px; cursor: pointer;"></i>
+						{% endif %}
+						{% endwith %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="collapse" id="dis{{ item.id }}">
+					<span class="text-primary" style="font-size: 10px;">Retail</span>
+					<p>&#8377 {{ item.retail_price }} <span style="text-decoration: line-through;">&#8377 {{item.price}}</span> <span class="text-success">{{ item.retail_dis }}% off</span></p>
+					<span class="text-primary" style="font-size: 10px;">Wholesale</span>
+					<p>&#8377 {{ item.wholesale_price }} <span style="text-decoration: line-through;">&#8377 {{item.price}}</span> <span class="text-success">{{ item.wholesale_dis }}% off</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+<div id="loader-modal" class="modal fade" data-backdrop='static' data-keyboard='false' style="padding-top: 15%;">
+	<h1 class="text-center" style="color: white;">Please Wait!</h1>
+	<p class="text-center" style="color: white;">We are processing your Order. Thank You for your patience....</p>
+	<h1 class="text-center">
+		<div class="loader"></div>
+	</h1>
+</div>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript" src="{% static "js/shop/detail.js" %}"></script>
+<script type="text/javascript">
+	var wr_war=function(){var t=parseInt($("#qty-input").val(),10),a=parseInt($("#qty-input").attr("value"),10);if(a>t?($("#price-tag").html("{{ item.retail_price|floatformat }}"),$("#dis-tag").html("{{ item.retail_dis|floatformat }}% off")):($("#price-tag").html("{{ item.wholesale_price|floatformat }}"),$("#dis-tag").html("{{ item.wholesale_dis|floatformat }}% off")),a>t){var i=setInterval(function(){$("#wr-war").animate({color:"#a94442"},"fast",function(){$("#wr-war").animate({color:"#337ab7"},"fast")})},300);setTimeout(function(){clearInterval(i)},2e3)}};$(".cart-add").click(function(t){t.preventDefault(),$("#loader-modal").modal("show");var a=$("#qty-input").val();$.post("{% url "cart:cart_add" %}",{quantity:a,item:$("#qty-input").attr("data-id"),colour:$(".colour-active").attr("data-id")},function(t){"ok"==t.status&&(window.location="{% url "cart:cart_detail" %}")})}),$(".add-check").click(function(t){t.preventDefault(),$("#loader-modal").modal("show");var a=$("#qty-input").val();$.post("{% url "cart:cart_add" %}",{quantity:a,item:$("#qty-input").attr("data-id"),colour:$(".colour-active").attr("data-id")},function(t){"ok"==t.status&&(window.location="{% url "account:cart_checkout" %}")})}),$("#qty-input").change(function(){wr_war()}),$("#qty-input").keyup(function(t){t.which>=48&&t.which<=57||8==t.which?wr_war():(9==t.which||13==t.which)&&$(".cart-add:first").trigger("click")}),$("#qty-input").keydown(function(t){if(9==t.which||13==t.which)$(".cart-add:first").trigger("click");else{if(190==t.which)return!1;if(t.which<48&&8!=t.which||t.which>57&&t.which<96&&t.which>105&&116!=t.which)return!1}});
+	var openPhotoSwipe=function(){var o=document.querySelectorAll(".pswp")[0],i=[{% for colour_image in colour_images %}{% load thumbnail %}{% thumbnail colour_image.image "1000x1300" crop="100% center" as im %}{src:"{{ im.url }}",w:1e3,h:1300}{% endthumbnail %}{% endfor %}],t={history:!1,focus:!1,showAnimationDuration:0,hideAnimationDuration:0},e=new PhotoSwipe(o,PhotoSwipeUI_Default,i,t);e.init()};$(".item img").click(function(){openPhotoSwipe()});
+</script>
+{% endblock %}

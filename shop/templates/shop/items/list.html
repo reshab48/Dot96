@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}{% endblock %}
+{% block content %}
+<script type="text/javascript" src="{% static "js/account/wish.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/list.css" %}">
+<div class="row">
+	<div class="col-lg-2 col-md-2" id="filterCollapse" style="padding: 5px;">
+		
+	</div>
+	<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="padding: 5px;">
+		<div class="panel panel-default" style="border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white; padding-bottom: 0px;">
+				<p class="text-muted" style="font-size: 11px;">
+					<span>Shop > {% if category %}{{ category.name }}{% elif sub_category %}{{ sub_category.category.name }}{% endif %}{% if sub_category %} > {{ sub_category.name }}{% elif trending %}Trending{% endif %}</span>
+				</p>
+				<h4>{% if category %}{{ category.name }}{% else %}{{ sub_category.name }}{% endif %} <span class="hidden-xs text-muted" style="font-size: 11px;">(Showing {{items|length}} of {{ total }} Products)</span></h4>
+				<span class="visible-xs text-muted" style="font-size: 11px;">(Showing {{items|length}} of {{ total }} Products)</span>
+				<div class="dropdown visible-sm visible-xs">
+					<a href="#" class="btn-list dropdown-toggle btn-block" data-toggle="dropdown">Sort by <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li class="dropdown-header"><h6>Sort by</h6></li>
+						<li class="divider"></li>
+						<li class="sort-active sort1"><a href="{% if category %}{% url "shop:product_sortlist_by_category" category_slug=category.slug sort_type=1 %}{% elif sub_category %}{% url "shop:product_sortlist_by_sub_category" sub_category_slug=sub_category.slug sort_type=1 %}{% elif trending %}{% url "shop:product_sortlist_by_trend" trending=1 sort_type=1 %}{% endif %}"><h6>Popularity</h6></a></li>
+						<li class="sort2"><a href="{% if category %}{% url "shop:product_sortlist_by_category" category_slug=category.slug sort_type=2 %}{% elif sub_category %}{% url "shop:product_sortlist_by_sub_category" sub_category_slug=sub_category.slug sort_type=2 %}{% elif trending %}{% url "shop:product_sortlist_by_trend" trending=1 sort_type=2 %}{% endif %}"><h6>Price -- Low to High</h6></a></li>
+						<li class="sort3"><a href="{% if category %}{% url "shop:product_sortlist_by_category" category_slug=category.slug sort_type=3 %}{% elif sub_category %}{% url "shop:product_sortlist_by_sub_category" sub_category_slug=sub_category.slug sort_type=3 %}{% elif trending %}{% url "shop:product_sortlist_by_trend" trending=1 sort_type=3 %}{% endif %}"><h6>Price -- High to Low</h6></a></li>
+						<li class="sort4"><a href="{% if category %}{% url "shop:product_sortlist_by_category" category_slug=category.slug sort_type=4 %}{% elif sub_category %}{% url "shop:product_sortlist_by_sub_category" sub_category_slug=sub_category.slug sort_type=4 %}{% elif trending %}{% url "shop:product_sortlist_by_trend" trending=1 sort_type=4 %}{% endif %}"><h6>Newest First</h6></a></li>
+					</ul>
+				</div>
+				<ul class="sorting hidden-sm hidden-xs">
+					<li><h6>Sort by</h6></li>
+					<li class="sort-active sort1"><a href="{% if category %}{% url "shop:product_sortlist_by_category" category_slug=category.slug sort_type=1 %}{% elif sub_category %}{% url "shop:product_sortlist_by_sub_category" sub_category_slug=sub_category.slug sort_type=1 %}{% elif trending %}{% url "shop:product_sortlist_by_trend" trending=1 sort_type=1 %}{% endif %}"><h6>Popularity</h6></a></li>
+					<li class="sort2"><a href="{% if category %}{% url "shop:product_sortlist_by_category" category_slug=category.slug sort_type=2 %}{% elif sub_category %}{% url "shop:product_sortlist_by_sub_category" sub_category_slug=sub_category.slug sort_type=2 %}{% elif trending %}{% url "shop:product_sortlist_by_trend" trending=1 sort_type=2 %}{% endif %}"><h6>Price -- Low to High</h6></a></li>
+					<li class="sort3"><a href="{% if category %}{% url "shop:product_sortlist_by_category" category_slug=category.slug sort_type=3 %}{% elif sub_category %}{% url "shop:product_sortlist_by_sub_category" sub_category_slug=sub_category.slug sort_type=3 %}{% elif trending %}{% url "shop:product_sortlist_by_trend" trending=1 sort_type=3 %}{% endif %}"><h6>Price -- High to Low</h6></a></li>
+					<li class="sort4"><a href="{% if category %}{% url "shop:product_sortlist_by_category" category_slug=category.slug sort_type=4 %}{% elif sub_category %}{% url "shop:product_sortlist_by_sub_category" sub_category_slug=sub_category.slug sort_type=4 %}{% elif trending %}{% url "shop:product_sortlist_by_trend" trending=1 sort_type=4 %}{% endif %}"><h6>Newest First</h6></a></li>
+				</ul>
+			</div>
+			<div class="row item-list">
+				{% include "shop/items/list_ajax.html" %}
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+    {% block domready %}
+        var page=1,empty_page=!1,block_request=!1;$(window).scroll(function(){var e=$(document).height()-$(window).height()-200;$(window).scrollTop()>e&&0==empty_page&&0==block_request&&(block_request=!0,page+=1,$.get("?page="+page,function(e){""==e?empty_page=!0:(block_request=!1,$(".item-list").append(e))}))});
+	{% endblock %}
+</script>
+<script type="text/javascript" src="{% static "js/shop/list.js" %}"></script>
+{% endblock %}

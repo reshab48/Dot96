@@ -1,0 +1,71 @@
+.buy-btn {
+    padding: 18px 8px;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2);
+    width: 100%;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-family: Roboto, Arial, sans-serif;
+    font-weight: bold;
+}
+
+.buy-btn:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+.colour-active {
+	border: 3px solid #4285f4;
+}
+
+.loader {
+    display: table;
+    margin: 0 auto;
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.highlights {
+	padding: 0px;
+}
+
+.highlights li {
+	list-style: none;
+	font-size: 14px;
+	padding: 5px;
+}
+
+.highlights li i {
+	color: #4285f4;
+}
+
+.btn-list {
+    margin-top: 5px;
+    background: #2874f0;
+    color: #fff;
+    border: none;
+    display: inline-block;
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 20px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+    border: solid 1px #e0e0e0;
+}
+
+.btn-list:hover {
+    color: #fff;
+    text-decoration: none;
+}

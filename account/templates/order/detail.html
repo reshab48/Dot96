@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static "css/order/detail.css" %}">
+<div class="row" style="margin-top: 10px;">
+	<div class="col-lg-2 col-md-1 visible-md visible-lg">
+		
+	</div>
+	<div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+		{% if messages %}
+		{% for message in messages %}
+		{% if message.tags == "error" %}
+		<div class="alert alert-danger fade in alert-dismissable" style="list-style: none; margin: 0px; margin-bottom: 8px;">
+			<a class="close" href="#" data-dismiss="alert" aria-label="close" title="close">x</a>
+			<strong>Error!</strong> {{message|safe}}
+		</div>
+		{% else %}
+		<div class="alert alert-success fade in alert-dismissable" style="list-style: none; margin: 0px; margin-bottom: 8px;">
+			<a class="close" href="#" data-dismiss="alert" aria-label="close" title="close">x</a>
+			<strong>Success!</strong> {{message|safe}}
+		</div>
+		{% endif %}
+		{% endfor %}
+		{% endif %}
+		<div class="panel panel-default" style="border-radius: 0px; padding: 20px;">
+			<div class="row">
+				<div class="col-sm-12 col-xs-12 visible-sm visible-xs">
+					<h6 style=" margin-bottom: 30px;" class="text-muted">ORDER DETAILS</h6>
+					<h6 class="text-muted" style="margin-bottom: 3px;">Order ID</h6>
+					<h6 style="margin-top: 0px; margin-bottom: 20px;">{{ order.id }} <span>({{ order.order_item.all|length }} items)</span></h6>
+					<h6 class="text-muted" style="margin-bottom: 3px;">Order Date</h6>
+					<h6 style="margin-top: 0px; margin-bottom: 20px;">{{ order.created }}</h6>
+					<h6 class="text-muted" style="margin-bottom: 3px;">Order Total</h6>
+					<h6 style="margin-top: 0px; margin-bottom: 20px;">{{ order.order_total }}</h6>
+					<hr>
+				</div>
+				<div class="col-lg-4 col-md-4 visible-lg visible-md ref" style="border-right: 0.5px solid #d3d3d3;">
+					<h6 style=" margin-bottom: 30px;" class="text-muted">ORDER DETAILS</h6>
+					<h6 class="text-muted" style="margin-bottom: 3px;">Order ID</h6>
+					<h6 style="margin-top: 0px; margin-bottom: 20px;">{{ order.id }} <span>({{ order.order_item.all|length }} items)</span></h6>
+					<h6 class="text-muted" style="margin-bottom: 3px;">Order Date</h6>
+					<h6 style="margin-top: 0px; margin-bottom: 20px;">{{ order.created }}</h6>
+					<h6 class="text-muted" style="margin-bottom: 3px;">Order Total</h6>
+					<h6 style="margin-top: 0px; margin-bottom: 20px;">{{ order.order_total }}</h6>
+				</div>
+				<div class="col-lg-4 col-md-4 visible-lg visible-md small" style="border-right: 0.5px solid #d3d3d3;">
+					<h6 style=" margin-bottom: 30px;" class="text-muted">ADDRESS</h6>
+					<h6 style="margin-bottom: 3px; font-weight: bold;">{{ order.drop_out.full_name }}</h6>
+					<p style="margin-top: 0px; margin-bottom: 20px; font-size: 15px;">{{ order.drop_out.street }} {{ order.drop_out.landmark }} PO: {{ order.drop_out.city }} -{{ order.drop_out.pin }}</p>
+					<p style="font-size: 15px;"><span style="font-weight: bold;">Phone</span> {{ order.drop_out.phone }}</p>
+				</div>
+				<div class="col-sm-12 col-xs-12 visible-sm visible-xs">
+					<h6 style=" margin-bottom: 30px;" class="text-muted">ADDRESS</h6>
+					<h6 style="margin-bottom: 3px; font-weight: bold;">{{ order.drop_out.full_name }}</h6>
+					<p style="margin-top: 0px; margin-bottom: 20px; font-size: 15px;">{{ order.drop_out.street }} {{ order.drop_out.landmark }} PO: {{ order.drop_out.city }} -{{ order.drop_out.pin }}</p>
+					<p style="font-size: 15px;"><span style="font-weight: bold;">Phone</span> {{ order.drop_out.phone }}</p>
+					<hr>
+					<h6 style=" margin-bottom: 30px;" class="text-muted">MANAGE ORDER</h6>
+					<h6 style="margin-bottom: 15px; font-weight: bold;" class="text-primary"><a href="#"><i class="fa fa-file-pdf-o" style="margin-right: 5px;"></i> REQUEST INVOICE</a></h6>
+					<h6 style="margin-bottom: 15px; font-weight: bold;" class="text-primary"><a href="#"><i class="fa fa-question-circle-o" style="margin-right: 5px;"></i> NEED HELP?</a></h6>
+					<a href="#" class="d-btn btn-block text-center" style="background-color: #e20223; font-weight: bold;">CANCEL ORDER</a>
+				</div>
+				<div class="col-lg-4 col-md-4 visible-lg visible-md">
+					<h6 style=" margin-bottom: 30px;" class="text-muted">MANAGE ORDER</h6>
+					<h6 style="margin-bottom: 15px; font-weight: bold;" class="text-primary"><a href="{{ order.get_absolute_invoice_url }}"><i class="fa fa-file-pdf-o" style="margin-right: 5px;"></i> REQUEST INVOICE</a></h6>
+					<h6 style="margin-bottom: 15px; font-weight: bold;" class="text-primary"><a href="#"><i class="fa fa-question-circle-o" style="margin-right: 5px;"></i> NEED HELP?</a></h6>
+					{% if order.paid == False %}
+					<a href="#" class="d-btn btn-block text-center" style="background-color: #e20223; font-weight: bold; margin-top: 30px;">CANCEL ORDER</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default" style="border-radius: 0px;">
+			<div class="panel-body">
+				{% for order_item in order.order_item.all %}
+				<div class="row" style="margin-bottom: 15px;">
+					<div class="col-lg-2 col-md-3 col-sm-6 col-xs-6" style="padding: 0px;">
+						<a href="{{ order_item.item.item.get_absolute_url }}">
+							{% load thumbnail %}
+							{% thumbnail order_item.item.colour_image "250x300" crop="100% center" as im %}
+							<img src="{{ im.url }}" style="height: 120px; width: 120px;">
+							{% endthumbnail %}
+						</a>
+					</div>
+					<div class="col-sm-6 col-xs-6 visible-sm visible-xs">
+						<h6 style="font-weight: bold; margin-bottom: 0px;"><span class="text-success" style="margin-right: 8px; font-size: 12px; font-weight: normal;">x{{ order_item.quantity }}</span> <i class="fa fa-rupee"></i>{{ order_item.amount }}</h6>
+						<span style="font-size: 11px; font-weight: normal;" class="text-muted">(Inclusive of GST)</span>
+						{% if order.paid == False %}
+						<p style="margin-bottom: 3px; margin-top: 10px;">Dispatched</p>
+						<p class="text-muted" style="font-size: 13px;">Your item has been dispatched.</p>
+						{% else %}
+						<p style="margin-bottom: 3px;">Dilivered</p>
+						<p class="text-muted" style="font-size: 13px;">Your item has been delivered.</p>
+						{% endif %}
+					</div>
+					<div class="col-xs-12 col-sm-12 visible-xs visible-sm" style="padding: 0px;">
+						<div class="row">
+							{% if order.paid == True %}
+							<div class="col-sm-6 col-xs-6">
+								<a href="{{ order_item.item.item.get_absolute_url }}"><h6 style="font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ order_item.item.item.name }}</h6></a>
+								<p class="text-muted" style="margin-bottom: 0px;">in <a href="{{ order_item.item.item.sub_category.get_absolute_url }}">{{ order_item.item.item.sub_category }}</a></p>
+								{% if order_item.quantity >= order_item.item.item.wholesale_at %}
+								<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span>{{ order_item.item.item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span></p>
+								<span class="text-success" style="font-size: 16px;">{{ order_item.item.item.wholesale_dis|floatformat }}% off</span>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+								{% else %}
+								<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span>{{ order_item.item.item.retail_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span></p>
+								<span class="text-success" style="font-size: 16px;">{{ order_item.item.item.retail_dis|floatformat }}% off</span>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+								{% endif %}		
+							</div>
+							<div class="col-sm-6 col-xs-6">
+								{% if order_item not in order.return_item.all and order_item not in order.exchange_item.all %}
+								<div class="row">
+									<div class="col-sm-12 col-xs-12" style="padding: 3px;">
+										<a href="{% url "account:order_item_return" order.id order_item.id %}" class="d-btn btn-block text-center" style="background-color: #ff9f00;">RETURN</a>
+									</div>
+									<div class="col-sm-12 col-xs-12" style="padding: 3px;">
+										<a href="{% url "account:order_item_exchange" order.id order_item.id %}" class="d-btn btn-block text-center" style="background-color: #fb641b;">EXCHANGE</a>
+									</div>
+								</div>
+								{% endif %}
+							</div>
+							{% else %}
+							<div class="col-sm-12 col-xs-12">
+								<a href="{{ order_item.item.item.get_absolute_url }}"><h6 style="font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ order_item.item.item.name }}</h6></a>
+								<p class="text-muted" style="margin-bottom: 0px;">in <a href="{{ order_item.item.item.sub_category.get_absolute_url }}">{{ order_item.item.item.sub_category }}</a></p>
+								{% if order_item.quantity >= order_item.item.item.wholesale_at %}
+								<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span>{{ order_item.item.item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span></p>
+								<span class="text-success" style="font-size: 16px;">{{ order_item.item.item.wholesale_dis|floatformat }}% off</span>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+								{% else %}
+								<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span>{{ order_item.item.item.retail_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px; margin-left: 5px;">{{ order_item.item.item.retail_dis|floatformat }}% off</span></p>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+								{% endif %}		
+							</div>
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-5 visible-md visible-lg" style="padding-left: 0px;">
+						<a href="{{ order_item.item.item.get_absolute_url }}"><h6 style="font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ order_item.item.item.name }}</h6></a>
+						<p class="text-muted" style="margin-bottom: 0px;">in <a href="{{ order_item.item.item.sub_category.get_absolute_url }}">{{ order_item.item.item.sub_category }}</a></p>
+						{% if order_item.quantity >= order_item.item.item.wholesale_at %}
+						<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span>{{ order_item.item.item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;">{{ order_item.item.item.wholesale_dis|floatformat }}% off</span></p>
+						<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+						{% else %}
+						<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span>{{ order_item.item.item.retail_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;">{{ order_item.item.item.retail_dis|floatformat }}% off</span></p>
+						<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+						{% endif %}
+					</div>
+					<div class="col-lg-4 col-md-4 visible-lg visible-md">
+						<h6 style="font-weight: bold;"><span class="text-success" style="margin-right: 8px; font-size: 12px; font-weight: normal;">x{{ order_item.quantity }}</span> <i class="fa fa-rupee"></i>{{ order_item.amount }} <span style="font-size: 11px; margin-left: 5px; font-weight: normal;" class="text-muted">(Inclusive of GST)</span></h6>
+						{% if order.paid == False %}
+						<p style="margin-bottom: 3px;">Dispatched</p>
+						<p class="text-muted" style="font-size: 13px;">Your item has been dispatched.</p>
+						{% else %}
+						<p style="margin-bottom: 3px;">Dilivered</p>
+						<p class="text-muted" style="font-size: 13px;">Your item has been delivered.</p>
+						{% if order_item not in order.return_item.all and order_item not in order.exchange_item.all %}
+						<div class="row">
+							<div class="col-lg-6 col-md-6" style="padding: 3px;">
+								<a href="{% url "account:order_item_return" order.id order_item.id %}" class="d-btn btn-block text-center" style="background-color: #ff9f00;">RETURN</a>
+							</div>
+							<div class="col-lg-6 col-md-6" style="padding: 3px;">
+								<a href="{% url "account:order_item_exchange" order.id order_item.id %}" class="d-btn btn-block text-center" style="background-color: #fb641b;">EXCHANGE</a>
+							</div>
+						</div>
+						{% endif %}
+						{% endif %}
+					</div>
+				</div>
+				{% endfor %}
+				{% if order.if_return == True or order.if_exchange == True %}
+				{% if order.if_return == True %}
+				<div class="panel panel-default" style="border-radius: 0px;">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+								<h6 style="font-weight: bold;">Return Status</h6>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+								<a href="#" style="font-weight: bold;" class="pull-right">View Details <i class="fa fa-caret-right"></i></a>
+							</div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<p class="text-muted" style="font-size: 12px;">Return Items: ({{ order.return_item.all|length }} Items)</p>
+						<p class="text-muted" style="font-size: 12px;">Refund With: Initial</p>
+						<p class="text-muted" style="font-size: 12px;">Order ID: {{ order.id }}</p>
+						{% if order.cashback == True %}
+						<p class="text-success" style="font-size: 12px;">COMPLETED</p>
+						{% else %}
+						<p class="text-primary" style="font-size: 12px;">PENDING</p>
+						{% endif %}
+					</div>
+				</div>
+				{% endif %}
+				{% if order.if_exchange == True %}
+				<div class="panel panel-default" style="border-radius: 0px;">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+								<h6 style="font-weight: bold;">Excxhange Status</h6>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+								<a href="#" style="font-weight: bold;" class="pull-right">View Details <i class="fa fa-caret-right"></i></a>
+							</div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<p class="text-muted" style="font-size: 12px;">Exchange Items: ({{ order.exchange_item.all|length }} Items)</p>
+						<p class="text-muted" style="font-size: 12px;">Exchange At: Initial</p>
+						<p class="text-muted" style="font-size: 12px;">Order ID: {{ order.id }}</p>
+						{% if order.exchanged == True %}
+						<p class="text-success" style="font-size: 12px;">COMPLETED</p>
+						{% else %}
+						<p class="text-primary" style="font-size: 12px;">PENDING</p>
+						{% endif %}
+					</div>
+				</div>
+				{% endif %}
+				{% endif %}
+			</div>
+			<div class="panel-footer">
+				<div class="row" style="padding-left: 10px; padding-right: 10px;">
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding: 0px;">
+						{% if order.paid == False %}
+						<h6><i class="fa fa-shopping-bag text-primary" style="margin-right: 5px;"></i> Ordered On {{ order.created }}</h6>
+						{% else %}
+						<h6><i class="fa fa-truck text-primary"></i> Delivered On {{ order.delivered_on }}</h6>
+						{% endif %}
+					</div>
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding: 0px;">
+						<h6 class="pull-right visible-md visible-lg" style="font-weight: bold;"><span style="margin-right: 5px;">Order Total</span> <i class="fa fa-rupee"></i>{{ order.order_total }}</h6>
+						<h6 class="visible-sm visible-xs" style="font-weight: bold;"><span style="margin-right: 5px;">Order Total</span> <i class="fa fa-rupee"></i>{{ order.order_total }}</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-2 col-md-1 visible-md visible-lg">
+		
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".small").css('height', $(".ref").css('height'));
+	});
+</script>
+{% endblock %}

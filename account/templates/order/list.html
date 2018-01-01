@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static "css/order/list.css" %}">
+<div class="row" style="margin-top: 10px;">
+	<div class="col-lg-2 col-md-1 visible-md visible-lg">
+		
+	</div>
+	<div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+		<div class="panel panel-default" style="border-radius: 0px;">
+			<div class="panel-heading" style="background-color: white;">
+				<h5 style="font-weight: bold;"><span class="text-muted">My Account</span> <i class="fa fa-caret-right"></i> My Orders</h5>
+			</div>
+			<div class="panel-body" style="background-color: white;">
+				{% for order in orders %}
+				<div class="panel panel-default" style="border-radius: 0px;">
+					<div class="panel-heading">
+						<a href="{{ order.get_absolute_url }}" class="id-btn" style="background-color: #2874f0;">{{ order.id }}</a>
+						<a href="#" class="id-btn pull-right" style="color: black; padding-left: 25px; padding-right: 25px; border: 0.5px solid #d3d3d3; font-size: 14px;"><i class="fa fa-map-marker text-primary"></i> Track</a>
+					</div>
+					<div class="panel-body" style="background-color: white;">
+						{% for order_item in order.order_item.all %}
+						<div class="row" style="margin-bottom: 15px;">
+							<div class="col-lg-2 col-md-3 col-sm-6 col-xs-6" style="padding: 0px;">
+								<a href="{{ order_item.item.item.get_absolute_url }}">
+									{% load thumbnail %}
+									{% thumbnail order_item.item.colour_image "250x300" crop="100% center" as im %}
+									<img src="{{ im.url }}" style="height: 120px; width: 120px;">
+									{% endthumbnail %}
+								</a>
+							</div>
+							<div class="col-sm-6 col-xs-6 visible-sm visible-xs">
+								<h6 style="font-weight: bold;"><span class="text-success" style="margin-right: 8px; font-size: 12px; font-weight: normal;">x{{ order_item.quantity }}</span> <i class="fa fa-rupee"></i>{{ order_item.amount }} <span style="font-size: 11px; margin-left: 5px; font-weight: normal;" class="text-muted">(Inclusive of GST)</span></h6>
+								{% if order.paid == False %}
+								<p style="margin-bottom: 3px;">Dispatched</p>
+								<p class="text-muted" style="font-size: 13px;">Your item has been dispatched.</p>
+								{% else %}
+								<p style="margin-bottom: 3px;">Delivered</p>
+								<p class="text-muted" style="font-size: 13px;">Your item has been delivered.</p>
+								{% endif %}
+							</div>
+							<div class="col-lg-6 col-md-5 col-sm-12 col-xs-12" style="padding-left: 0px;">
+								<a href="{{ order_item.item.item.get_absolute_url }}"><h6 style="font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ order_item.item.item.name }}</h6></a>
+								<p class="text-muted" style="margin-bottom: 0px;">in <a href="{{ order_item.item.item.sub_category.get_absolute_url }}">{{ order_item.item.item.sub_category }}</a></p>
+								{% if order_item.quantity >= order_item.item.item.wholesale_at %}
+								<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span id="price-tag">{{ order_item.item.item.wholesale_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ order_item.item.item.wholesale_dis|floatformat }}% off</span></p>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+								{% else %}
+								<p style="font-size: 28px; color: black; margin-bottom: 0px;"><i class="fa fa-rupee"></i><span id="price-tag">{{ order_item.item.item.retail_price|floatformat }}</span> <span style="font-size: 16px; text-decoration: line-through; margin-left: 5px; margin-right: 5px;" class="text-muted"><i class="fa fa-rupee"></i>{{ order_item.item.item.price|floatformat }}</span> <span class="text-success" style="font-size: 16px;" id="dis-tag">{{ order_item.item.item.retail_dis|floatformat }}% off</span></p>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+								{% endif %}
+							</div>
+							<div class="col-lg-4 col-md-4 visible-md visible-lg">
+								<h6 style="font-weight: bold;"><span class="text-success" style="margin-right: 8px; font-size: 12px; font-weight: normal;">x{{ order_item.quantity }}</span> <i class="fa fa-rupee"></i>{{ order_item.amount }} <span style="font-size: 11px; margin-left: 5px; font-weight: normal;" class="text-muted">(Inclusive of GST)</span></h6>
+								{% if order.paid == False %}
+								<p style="margin-bottom: 3px;">Dispatched</p>
+								<p class="text-muted" style="font-size: 13px;">Your item has been dispatched.</p>
+								{% else %}
+								<p style="margin-bottom: 3px;">Delivered</p>
+								<p class="text-muted" style="font-size: 13px;">Your item has been delivered.</p>
+								{% endif %}
+							</div>
+						</div>
+						{% endfor %}
+						{% if order.if_return == True or order.if_exchange == True %}
+						<div class="panel panel-default" style="border-radius: 0px;">
+							{% if order.if_return == True %}
+							<div class="panel-heading">
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+										<h6 style="font-weight: bold;">Return Status</h6>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+										<a href="#" style="font-weight: bold;" class="pull-right">View Details <i class="fa fa-caret-right"></i></a>
+									</div>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p class="text-muted" style="font-size: 12px;">Return Items: ({{ order.return_item.all|length }} Items)</p>
+								<p class="text-muted" style="font-size: 12px;">Refund With: Initial</p>
+								<p class="text-muted" style="font-size: 12px;">Order ID: {{ order.id }}</p>
+								{% if order.cashback == True %}
+								<p class="text-success" style="font-size: 12px;">COMPLETED</p>
+								{% else %}
+								<p class="text-primary" style="font-size: 12px;">PENDING</p>
+								{% endif %}
+							</div>
+							{% endif %}
+							{% if order.if_exchange == True %}
+							<div class="panel-heading">
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+										<h6 style="font-weight: bold;">Excxhange Status</h6>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding: 0px;">
+										<a href="#" style="font-weight: bold;" class="pull-right">View Details <i class="fa fa-caret-right"></i></a>
+									</div>
+								</div>
+							</div>
+							<div class="panel-body">
+								<p class="text-muted" style="font-size: 12px;">Exchange Items: ({{ order.exchange_item.all|length }} Items)</p>
+								<p class="text-muted" style="font-size: 12px;">Exchange At: Initial</p>
+								<p class="text-muted" style="font-size: 12px;">Order ID: {{ order.id }}</p>
+								{% if order.exchanged == True %}
+								<p class="text-success" style="font-size: 12px;">COMPLETED</p>
+								{% else %}
+								<p class="text-primary" style="font-size: 12px;">PENDING</p>
+								{% endif %}
+							</div>
+							{% endif %}
+						</div>
+						{% endif %}
+					</div>
+					<div class="panel-footer">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding: 0px;">
+								{% if order.paid == True %}
+								<h6><span class="text-muted">Delivered On</span> {{ order.delivered_on }}</h6>
+								{% else %}
+								<h6><span class="text-muted">Ordered On</span> {{ order.created }}</h6>
+								{% endif %}
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding: 0px;">
+								<h6 class="pull-right visible-md visible-lg"><span class="text-muted" style="margin-right: 5px;">Order Total</span> <i class="fa fa-rupee"></i>{{ order.order_total }}</h6>
+								<h6 class="visible-sm visible-xs"><span class="text-muted" style="margin-right: 5px;">Order Total</span> <i class="fa fa-rupee"></i>{{ order.order_total }}</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-2 col-md-1 visible-md visible-lg">
+		
+	</div>
+</div>
+{% endblock %}

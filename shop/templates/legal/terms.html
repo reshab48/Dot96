@@ -1,0 +1,55 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %}{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% static "css/base.css" %}">
+</head>
+<body>
+	<div class="navbar navbar-default navbar-fixed-top">
+		<div class="row">
+			<a href="/"><h5 class="col-lg-1 col-md-1 col-sm-2 col-xs-3 pull-left" style="margin-top: 15px;"><i class="fa fa-chevron-left text-primary" style="font-size: 20px; margin-left: 10px;"></i></h5></a>
+			<div class="navbar-header col-lg-11 col-md-11 col-sm-10 col-xs-9 text-center">
+				<div class="navbar-brand" style="width: 80%;">Terms & Conditions</div>
+			</div>
+		</div>
+	</div>
+	<div class="container" style="margin-top: 50px;">
+		<div class="container-fluid" style="margin-bottom: 25px;">
+			<h3 style="margin-bottom: 20px;">Terms & Conditions</h3>
+			<p class="text-muted" style="font-size: 15px;">
+				By using this website and/or placing an order, you agree to be bound by the terms and conditions set out below. Please also read our Privacy Policy regarding personal information provided by you.
+			</p>
+			<p class="text-muted" style="font-size: 15px;">
+				We sell products from different traders both for wholesale and retail market according to the quantity purchased. All prices of products are not inclusive of GST.
+			</p>
+			<p class="text-muted" style="font-size: 15px;">
+				No prior notice for amendment to the terms, the amendment will be applied to orders thereafter. Upon confirmation of your orders, we will not be able to make any changes.
+			</p>
+		</div>
+		<div class="container-fluid" style="margin-bottom: 25px;">
+			<h3 style="margin-bottom: 20px;">Limitation of laibility</h3>
+			<p class="text-muted" style="font-size: 15px;">
+				Dot96 shall not be liable for any special or consequential damages that result from the use of, or the inability to use, the materials on this site or the performance of the products, even if Dot96 has been advised of the possibility of such damages. Applicable law may not allow the limitation of exclusion of liability or incidental or consequential damages, so the above limitation or exclusion may not apply to you.
+			</p>
+		</div>
+		<div class="container-fluid" style="margin-bottom: 25px;">
+			<h3 style="margin-bottom: 20px;">Termination</h3>
+			<p class="text-muted" style="font-size: 15px;">
+				 These terms and conditions are applicable to you upon your accessing the site and/or completing the registration or shopping process. These terms and conditions, or any part of them, may be terminated by Dot96 without notice at any time, for any reason. Any termination of this agreement shall not affect the respective rights and obligations (including without limitation, payment obligations) of the parties arising before the date of termination. 
+			</p>
+		</div>
+		<div class="container-fluid" style="margin-bottom: 25px;">
+			<h3 style="margin-bottom: 20px;">Use of site</h3>
+			<p class="text-muted" style="font-size: 15px;">
+				  Harassment in any manner or form on the site, including via e-mail, chat, or by use of obscene or abusive language, is strictly forbidden. Impersonation of others, including a Dot96 or other licensed employee, host, or representative, as well as other members or visitors on the site is prohibited. You may not upload to, distribute, or otherwise publish through the site any content which is libelous, defamatory, obscene, threatening, invasive of privacy or publicity rights, abusive, illegal, or otherwise objectionable which may constitute or encourage a criminal offense, violate the rights of any part tor which may otherwise give rise to liability or violate any law. You may not upload commercial content on the site or usethe site to solicit others to join or become members of any other commercial online service or other organization.
+			</p>
+		</div>
+	</div>
+</body>
+</html>

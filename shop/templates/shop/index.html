@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}{% endblock %}
+{% block content %}
+<script type="text/javascript" src="{% static "js/account/wish.js" %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}">
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} fade in alert-dismissable" style="list-style: none; margin: 0px;">
+	<a class="close" href="#" data-dismiss="alert" aria-label="close" title="close">x</a>
+	<strong>Success!</strong> {{message|safe}}
+</div>
+{% endfor %}
+{% endif %}
+<div id="myCarousel" class="carousel slide hidden-xs" data-ride="carousel">
+	<!-- Indicators -->
+	<ol class="carousel-indicators">
+		{% for promo in promos %}
+		<li data-target="#myCarousel" class="pointers">
+		{% endfor %}
+	</ol>
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+		{% for promo in promos %}
+		<div class="item">
+        	{% load thumbnail %}
+      		{% thumbnail promo.image "1200x300" crop="100% center" as img %}
+        	<a href="{{promo.sub_category.get_absolute_url}}"><img src="{{ img.url }}" style="width: 100%;"></a>
+        	{% endthumbnail %}
+      	</div>
+		{% endfor %}
+    </div>
+
+    <!-- Left and right controls -->
+   	<a class="left carousel-control" href="#myCarousel" data-slide="prev">
+    	<span class="glyphicon glyphicon-chevron-left"></span>
+    	<span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+    	<span class="glyphicon glyphicon-chevron-right"></span>
+    	<span class="sr-only">Next</span>
+    </a>
+</div>
+<div id="mCarousel" class="carousel slide visible-xs" data-ride="carousel">
+	<!-- Indicators -->
+	<ol class="carousel-indicators">
+		{% for promo in promos %}
+		<li data-target="#mCarousel" class="pointers">
+		{% endfor %}
+	</ol>
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+		{% for promo in promos %}
+		<div class="item">
+			<a href="{{promo.sub_category.get_absolute_url}}"><img src="{{ promo.m_image.url }}" style="width: 100%;"></a>
+      	</div>
+		{% endfor %}
+    </div>
+
+    <!-- Left and right controls -->
+   	<a class="left carousel-control" href="#mCarousel" data-slide="prev">
+    	<span class="glyphicon glyphicon-chevron-left"></span>
+    	<span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#mCarousel" data-slide="next">
+    	<span class="glyphicon glyphicon-chevron-right"></span>
+    	<span class="sr-only">Next</span>
+    </a>
+</div>
+{% if items_viewed|length == 4 %}
+<div class="row" style="margin-top: 10px;">
+	<div class="col-lg-1 col-md-1">
+			
+	</div>
+	<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 panel panel-default" style="padding: 3px; border-radius: 0px;">
+		<div class="panel-heading" style="background-color: white;">
+			<div class="row">
+				<div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+					<h2 class="text-muted">#recentViews</h2>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-5 col-xs-5">
+					
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			{% for obj in items_viewed %}
+			{% with item=obj.item %}
+			<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" style="padding: 1px;">
+				<div class="panel panel-default item-box" style="margin: 0px; padding: 0px; border-radius: 0px;">
+					{% load thumbnail %}
+					{% thumbnail item.index_image "250x300" crop="100% center" as im %}
+					<a href="{{ item.get_absolute_url }}"><img src="{{ im.url }}" style="width: 100%"></a>
+					{% endthumbnail %}
+					<div class="w3-container" style="padding: 10px;">
+						<a href="{{ item.get_absolute_url }}"><p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.name }}</p></a>
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px; cursor: pointer;" data-toggle="collapse" data-target="#s{{ item.id }}">
+								<p style="margin-bottom: 2px;"><strong>&#8377 {{ item.wholesale_price|floatformat }}</strong> <span class="text-success">{{ item.wholesale_dis|floatformat }}% off</span></p>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+							</div>
+						</div>
+						<div class="collapse" id="s{{ item.id }}">
+							<span class="text-primary" style="font-size: 10px;">Retail</span>
+							<p>&#8377 {{ item.retail_price|floatformat }} <span style="text-decoration: line-through;">&#8377 {{item.price|floatformat}}</span> <span class="text-success">{{ item.retail_dis|floatformat }}% off</span></p>
+							<span class="text-primary" style="font-size: 10px;">Wholesale</span>
+							<p>&#8377 {{ item.wholesale_price|floatformat }} <span style="text-decoration: line-through;">&#8377 {{item.price|floatformat}}</span> <span class="text-success">{{ item.wholesale_dis|floatformat }}% off</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endwith %}
+			{% endfor %}
+		</div>
+	</div>
+	<div class="col-lg-1 col-md-1">
+		
+	</div>
+</div>
+{% endif %}
+<div class="row" style="margin-top: 10px;">
+	<div class="col-lg-1 col-md-1">
+		
+	</div>
+	<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 panel panel-default" style="padding: 3px; border-radius: 0px;">
+		<div class="panel-heading" style="background-color: white;">
+			<div class="row">
+				<div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+					<h2 class="text-muted">#trending</h2>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-5 col-xs-5">
+					<a href="{% url "shop:product_list_by_trend" trending=1 %}" class="pull-right btn-list">VIEW ALL</a>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			{% for item in items %}
+			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-6" style="padding: 3px;">
+				<div class="panel panel-default item-box" style="margin: 0px; padding: 0px; border-radius: 0px;">
+					{% load thumbnail %}
+					{% thumbnail item.index_image "250x300" crop="100% center" as im %}
+					<a href="{{ item.get_absolute_url }}"><img src="{{ im.url }}" style="width: 100%"></a>
+					{% endthumbnail %}
+					<div class="w3-container" style="padding: 10px;">
+						<a href="{{ item.get_absolute_url }}"><p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.name }}</p></a>
+						<div class="row">
+							<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="padding: 0px; cursor: pointer;" data-toggle="collapse" data-target="#dis{{ item.id }}">
+								<p style="margin-bottom: 2px;"><strong>&#8377 {{ item.wholesale_price|floatformat }}</strong> <span class="text-success">{{ item.wholesale_dis|floatformat }}% off</span></p>
+								<p class="text-muted" style="font-size: 10px;">(Not inclusive of GST)</p>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding: 0px;">
+								{% if request.user.is_authenticated %}
+								{% with users_wished=item.wished.all %}
+								{% if request.user not in users_wished %}
+								<i class="fa fa-heart-o pull-right wish-btn" data-id="{{ item.id }}" data-action="wish" style="margin-top: 3px; margin-right: 3px; cursor: pointer;"></i>
+								{% else %}
+								<i class="fa fa-heart text-danger pull-right wish-btn" data-id="{{ item.id }}" data-action="unwish" style="margin-top: 3px; margin-right: 3px; cursor: pointer;"></i>
+								{% endif %}
+								{% endwith %}
+								{% endif %}
+							</div>
+						</div>
+						<div class="collapse" id="dis{{ item.id }}">
+							<span class="text-primary" style="font-size: 10px;">Retail</span>
+							<p>&#8377 {{ item.retail_price|floatformat }} <span style="text-decoration: line-through;">&#8377 {{item.price|floatformat}}</span> <span class="text-success">{{ item.retail_dis|floatformat }}% off</span></p>
+							<span class="text-primary" style="font-size: 10px;">Wholesale</span>
+							<p>&#8377 {{ item.wholesale_price|floatformat }} <span style="text-decoration: line-through;">&#8377 {{item.price|floatformat}}</span> <span class="text-success">{{ item.wholesale_dis|floatformat }}% off</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="col-lg-1 col-md-1">
+		
+	</div>
+</div>
+<script type="text/javascript" src="{% static "js/shop/index.js" %}"></script>
+{% endblock %}

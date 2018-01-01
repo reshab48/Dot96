@@ -1,0 +1,187 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="{% static "png/favicon.png" %}"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %}{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+	<script src="http://cdn.jsdelivr.net/jquery.cookie/1.4.1/jquery.cookie.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="{% static "js/bootstrap-dropdownhover.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/lp_to.js" %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-dropdownhover.min.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "css/base.css" %}">
+	<!-- Google ADSense -->
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script>
+	  (adsbygoogle = window.adsbygoogle || []).push({
+	    google_ad_client: "ca-pub-6520713005345453",
+	    enable_page_level_ads: true
+	  });
+	</script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111708780-1"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-111708780-1');
+	</script>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top" style="border-bottom: none;">
+		<div class="container-fluid">
+			<div class="navbar-header col-lg-8 col-md-8" style="padding: 0px;">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#96navbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="/" class="navbar-brand" style="padding: 0px; padding-left: 10px;"><img src="{% static "png/icon.png" %}" style="width: 70px; height: 50px;"></a>
+				<div class="col-lg-6 col-md-5 col-sm-7 col-xs-7" style="padding: 10px;">
+					<div class="input-group">
+	    				<input type="text" class="form-control item-search" placeholder="Search">
+	   					<div class="input-group-btn">
+	   						<button class="btn btn-default" type="submit">
+	        					<i class="glyphicon glyphicon-search"></i>
+	        				</button>
+	    				</div>
+	  				</div>
+	  				<div class="search-result">
+	    				<li style="list-style: none; display: none;" class="text-center"><img src="{% static 'png/loader-search.gif' %}"></li>
+	        			<ul>
+	        			    
+	       				 </ul>
+	    			</div>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse col-lg-3 col-md-4 col-sm-12 col-xs-12 navbar-right" id="96navbar">
+				<ul class="nav navbar-nav">
+					{% if request.user.is_authenticated %}
+					<li><a href="{% url "cart:cart_detail" %}"><span class="glyphicon glyphicon-shopping-cart"></span> Cart <span class="badge">{{ cart|length }}</span></a></li>
+					<li class="dropdown">
+						<a href="{{ request.user.get_absolute_url }}" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"><i class="fa fa-id-card"></i> Account</a>
+						<ul class="dropdown-menu">
+							<li><a href="{{ request.user.get_absolute_url }}">Account Settings</a></li>
+							<li><a href="{% url "account:account_orders" %}">My Orders</a></li>
+							<li><a href="{% url "account:account_manage_address" %}">Manage Address</a></li>
+							<li><a href="{% url "account:account_wishlist" %}">Wishlist</a></li>
+							<li><a href="{% url "account:account_manage_feedback" %}">Feedbacks</a></li>
+						</ul>
+					</li>
+					<li><a href="#" data-toggle="modal" data-target="#logout-modal"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+					{% else %}
+					<li><a href="{% url "account:signup" %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+					<li><a href="{% url "account:login" %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+					<li><a href="{% url "cart:cart_detail" %}"><span class="glyphicon glyphicon-shopping-cart"></span> Cart <span class="badge">{{ cart|length }}</span></a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="navbar navbar-inverse category-box" style="border-radius: 0px; margin-bottom: 0px;">
+		<button type="button" class="navbar-toggle btn-block" data-toggle="collapse" data-target="#category-navbar" style="color: #9d9d9d; margin: 0px;">
+			<span>Categories <span class="caret"></span></span>
+		</button>
+		<div class="collapse navbar-collapse" id="category-navbar">
+			<ul class="nav navbar-nav">
+				{% for category in categories %}
+				<li class="dropdown" style="margin: 0px;">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">{{ category.name }} <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="{{ category.get_absolute_url }}">{{ category.name }} (All)</a></li>
+						<li class="divider"></li>
+						{% for sub_category in sub_categories %}
+						{% if sub_category.category == category %}
+						<li><a href="{{ sub_category.get_absolute_url }}">{{ sub_category.name }}</a></li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div id="logout-modal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-sm pull-right">
+			<div class="modal-content" style="border-radius: 0px;">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h6 class="modal-title text-warning"><strong>Warning!</strong> Logging-out will clear your cart</h6>
+					<strong><a href="{% url "account:logout" %}" class="text-primary"><span class="glyphicon glyphicon-log-out"></span> Logout Anyway</a></strong>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="{% static "js/base.js" %}"></script>
+	{% block content %}
+	{% endblock %}
+	<footer class="container-fluid text-muted">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-xs-12 col-sm-12" style="padding: 0px;">
+				<h3>Dot96 <p style="font-size: 12px; margin-bottom: 20px;">Copyright &copy; Dot96 | All Rights Reserved.</p></h3>
+				<div class="footer-info">
+					<div>
+						<div class="row">
+							<i class="fa fa-map-marker"></i>
+							<p style="margin-top: 0px;"><span>Siliguri, West Bengal</span> | 734001, India</p>
+						</div>
+					</div>
+					<div>
+						<div class="row">
+							<i class="fa fa-phone"></i>
+							<p>+91 96412-88364</p>
+						</div>
+					</div>
+					<div>
+						<div class="row">
+							<i class="fa fa-envelope"></i>
+							<p><a href="mailto:dot96info@gmail.com">dot96info@gmail.com</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-xs-12 col-sm-12" style="padding: 0px;">
+				<div class="footer-icons row visible-lg visible-md">
+					<div class="pull-right">
+						<p class="text-muted" style="font-size: 11px;">Visit us:</p>
+						<a href="#"><i class="fa fa-facebook"></i></a>
+						<a href="#"><i class="fa fa-twitter"></i></a>
+						<a href="#"><i class="fa fa-linkedin"></i></a>
+						<a href="#"><i class="fa fa-instagram"></i></a>
+					</div>
+				</div>
+				<div class="row" style="margin-bottom: 10px;">
+					<h6>About the Company</h6>
+					<p>Dot96 is a merchendise company that mainly deals in bags and luggages along with other wide range of products, offering wholesale and retail purchases online in siliguri.</p>
+					<a href="{% url "shop:terms_of_service" %}">T&C</a>
+					<a href="{% url "shop:privacy_policy" %}">Privacy</a>
+				</div>
+				<div class="footer-icons row text-center visible-sm visible-xs">
+					<div>
+						<p class="text-muted" style="font-size: 11px;">Visit us:</p>
+						<a href="#"><i class="fa fa-facebook"></i></a>
+						<a href="#"><i class="fa fa-twitter"></i></a>
+						<a href="#"><i class="fa fa-linkedin"></i></a>
+						<a href="#"><i class="fa fa-instagram"></i></a>
+					</div>
+				</div>
+				<div class="row text-center">
+					<p>Designed and Developed by <a href="https://iosoft.in" target="_blank">IOSoft</a></p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script type="text/javascript">
+		function csrfSafeMethod(e){return/^(GET|HEAD|OPTIONS|TRACE)$/.test(e)}var csrftoken=$.cookie("csrftoken");$.ajaxSetup({beforeSend:function(e,t){csrfSafeMethod(t.type)||this.crossDomain||e.setRequestHeader("X-CSRFToken",csrftoken)}});
+	</script>
+</body>
+</html>

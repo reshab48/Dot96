@@ -1,0 +1,32 @@
+.buy-btn {
+    padding: 15px 5px;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .2);
+    width: 100%;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-family: Roboto, Arial, sans-serif;
+    font-weight: bold;
+}
+
+.buy-btn:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+.loader {
+    display: table;
+    margin: 0 auto;
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
