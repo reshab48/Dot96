@@ -47,8 +47,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dot96.user_wsgi.application'
 
 DATABASES = {
-	'default': {
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'Dot96',
+        'USER': 'webadmin',
+        'PASSWORD': 'QJLy7S9QJ2',
+        'HOST': '192.168.100.200',
+        'PORT': '5432',
+    }
 }
 
 ABSOLUTE_URL_OVERRIDES = {
