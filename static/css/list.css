@@ -1,0 +1,57 @@
+.sorting {
+	overflow: auto;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+
+.sorting li {
+	margin-right: 15px;
+	padding-bottom: 5px;
+	float: left;
+}
+
+.sorting li h6 {
+	margin: 0px;
+}
+
+.sort-active {
+	color: #4285f4;
+	border-bottom: 3px solid #4285f4;
+}
+
+.sorting li a:hover {
+	text-decoration: none;
+	color: inherit;
+}
+
+.dropdown {
+	margin-bottom: 10px;
+}
+
+.dropdown-menu {
+	width: 100%;
+}
+
+.btn-list {
+	color: #fff !important;
+	margin-top: 5px;
+	background: #2874f0;
+	border: none;
+	display: inline-block;
+	border-radius: 2px;
+	font-size: 15px;
+	font-weight: 500;
+	padding: 10px 20px;
+	cursor: pointer;
+	outline: none;
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+	border: solid 1px #e0e0e0;
+	text-align: center;
+	text-decoration: none !important;
+}
+
+.btn-list:hover {
+	color: #fff;
+	text-decoration: none;
+}
